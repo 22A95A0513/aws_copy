@@ -1,0 +1,53 @@
+name: Deploy Lambda via Serverless
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'Choose environment to deploy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+
+      - name: Set AWS credentials based on stage
+        run: |
+          if [ "${{ github.event.inputs.stage }}" == "dev" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.DEV_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.stage }}" == "qa" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.QA_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.QA_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.stage }}" == "prod" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.PROD_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy with Serverless
+        run: sls deploy --stage ${{ github.event.inputs.stage }}
