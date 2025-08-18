@@ -1,0 +1,78 @@
+service: s3-file-copy-lambda
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: ${file(params/${opt:stage, 'dev'}/config.yaml):region}
+  timeout: 300
+  environment:
+    SRC_BUCKET: ${file(params/${opt:stage, 'dev'}/config.yaml):src_bucket}
+    DST_BUCKET_1: ${file(params/${opt:stage, 'dev'}/config.yaml):dst_bucket_1}
+    DST_BUCKET_2: ${file(params/${opt:stage, 'dev'}/config.yaml):dst_bucket_2}
+    DST_BUCKET_3: ${file(params/${opt:stage, 'dev'}/config.yaml):dst_bucket_3}
+    SNS_TOPIC_ARN: ${file(params/${opt:stage, 'dev'}/config.yaml):sns_topic_arn}
+    TOPIC_REGION: ${file(params/${opt:stage, 'dev'}/config.yaml):region}
+  iam:
+    role: LambdaExecutionRole
+
+functions:
+  copyFiles:
+    name: ${opt:stage, 'dev'}-s3-copy-lambda-function
+    handler: lambda_function.lambda_handler
+    events:
+      - eventBridge:
+          pattern:
+            source:
+              - "aws.s3"
+            detail-type:
+              - "Object Created"
+            detail:
+              bucket:
+                name:
+                  - ${file(params/${opt:stage, 'dev'}/config.yaml):src_bucket}
+              object:
+                key:
+                  prefix: "transfer_family/"
+
+resources:
+  Resources:
+    LambdaExecutionRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${opt:stage, 'dev'}-lambda-execution-role
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+                  - events.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: ${opt:stage, 'dev'}-lambda-policy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                    - s3:*
+                    - sns:Publish
+                    - events:PutRule
+                    - events:PutTargets
+                    - events:DescribeRule
+                    - events:EnableRule
+                    - events:DisableRule
+                    - lambda:InvokeFunction
+                    - lambda:UpdateFunctionCode
+                    - lambda:UpdateFunctionConfiguration
+                  Resource: "*"
+
+    #SNSTopic:
+      #Type: AWS::SNS::Topic
+      #Properties:
+        #TopicName: ${opt:stage, 'dev'}-sns-topic
