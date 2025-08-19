@@ -71,7 +71,7 @@ def lambda_handler(event,context):
             continue
 
         #1st filetypes Copy       
-        if '/dst1/' in file_nm:
+        if 'transfer_family/dst1/' in file_nm:
             revise_file_name = name+str(last_modified.strftime('%Y%m%d'))+str('.')+ext
             if revise_file_name not in dst_file_names_1:
                 copy_logic(s3,copy_Source,src_bucket, dst_bucket_1, revise_file_name, file_nm)
@@ -81,7 +81,7 @@ def lambda_handler(event,context):
                 messages.append(msg)
 
         #2nd filetypes Copy
-        elif '/dst2/' in file_nm:
+        elif 'transfer_family/dst2/' in file_nm:
 
             if '_' in ext:
                 ext=ext.split('_')[0]
@@ -95,7 +95,7 @@ def lambda_handler(event,context):
                 messages.append(msg)
 
         #3rd filetypes Copy       
-        elif '/dst3/' in file_nm:
+        elif 'transfer_family/dst3/' in file_nm:
             revise_file_name = name+str('_')+str(last_modified.strftime('%Y%m%d%H%M%S'))+str('.')+ext
             if revise_file_name not in dst_file_names_3:
                 copy_logic(s3,copy_Source,src_bucket, dst_bucket_3, revise_file_name, file_nm, sub_folder='eMDM/')
@@ -123,4 +123,5 @@ def copy_logic(s3,copy_Source,src_bucket_nm,dst_bucket_nm, revise_file_name, key
     s3.copy(copy_Source,dst_bucket_nm,sub_folder+revise_file_name)
     s3.copy(copy_Source,dst_bucket_nm, sub_folder+"archive/"+revise_file_name)
     print(f"Copied the file {src_bucket_nm}->{key} to {dst_bucket_nm}->{sub_folder}->{revise_file_name}")
+
     print(f"Copied the file {src_bucket_nm}->{key} to {dst_bucket_nm}->{sub_folder}->archive->{revise_file_name}","\n")
