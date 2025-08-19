@@ -38,7 +38,7 @@ jobs:
       - name: Install Serverless Framework
         run: |
           echo "Installing Serverless Framework..."
-          if ! npm install -g serverless; then
+          if ! npm install -g serverless@3; then
             echo "❌ Failed to install Serverless Framework"
             exit 1
           fi
