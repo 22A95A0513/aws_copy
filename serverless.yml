@@ -4,7 +4,7 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: python3.9
-  region: ${file(params/${opt:stage, 'dev'}/config.yaml):region}
+  region: ${file(params/${opt:stage, 'dev'}/config.yml):region}
   timeout: 300
   environment:
     SRC_BUCKET: ${file(params/${opt:stage, 'dev'}/config.yml):src_bucket}
@@ -30,7 +30,7 @@ functions:
             detail:
               bucket:
                 name:
-                  - ${file(params/${opt:stage, 'dev'}/config.yaml):src_bucket}
+                  - ${file(params/${opt:stage, 'dev'}/config.yml):src_bucket}
               object:
                 key:
                   prefix: "transfer_family/"
