@@ -1,0 +1,21 @@
+{
+  "name": "epc-extraction-lambda-service",
+  "description": "EPC lambda for extraction from EPC model to S3 for Magento",
+  "version": "1.0.0", 
+  "requiredNodeVersion": "18.12.0",
+  "scripts": {
+    "serverless": "serverless",
+    "nodeploy": "serverless deploy -n",  
+   "package": "rimraf *.zip && zip -rq temp-app.zip ./params/*.yml src node_modules package*.json serverless.yml ./get-current-time.js && mv temp-app.zip",
+    "build": "python3 -m py_compile src/*.py",    
+    "test": "pytest ./src/test/",
+    "deploy": "npm run build && serverless deploy",
+    "remove": "serverless remove"
+  },
+  "devDependencies": {
+    "rimraf": "^4.4.1",
+    "serverless": "^3.39.0",
+    "serverless-prune-plugin": "^2.0.1",
+    "serverless-python-requirements": "^6.1.2"
+  }
+}
