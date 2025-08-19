@@ -1,5 +1,5 @@
 region: us-east-1
-src_bucket: dev-src-bucket
+src_bucket: dev-src-bucket-1
 dst_bucket_1: dev-dst-bucket-1
 dst_bucket_2: dev-dst-bucket-2
 dst_bucket_3: dev-dst-bucket-3
