@@ -33,7 +33,8 @@ functions:
                   - ${file(params/${opt:stage, 'dev'}/config.yml):src_bucket}
               object:
                 key:
-                  prefix: "transfer_family/"
+                  prefix: 
+                  - "transfer_family/"
 
 resources:
   Resources:
