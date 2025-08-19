@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "Installing Serverless Framework..."
           if ! npm install -g serverless@3; then
-            echo "❌ Failed to install Serverless Framework"
+            echo "Failed to install Serverless Framework"
             exit 1
           fi
 
@@ -56,7 +56,7 @@ jobs:
             echo "AWS_ACCESS_KEY_ID=${{ secrets.PROD_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           else
-            echo "❌ Invalid stage selected"
+            echo "Invalid stage selected"
             exit 1
           fi
 
@@ -71,7 +71,7 @@ jobs:
         run: |
           echo "Validating Serverless configuration..."
           if ! sls print --stage ${{ github.event.inputs.stage }}; then
-            echo "❌ Serverless config validation failed"
+            echo "Serverless config validation failed"
             exit 1
           fi
 
@@ -79,7 +79,7 @@ jobs:
         run: |
           echo "Starting deployment for stage: ${{ github.event.inputs.stage }}"
           if ! sls deploy --stage ${{ github.event.inputs.stage }}; then
-            echo "❌ Deployment failed for stage: ${{ github.event.inputs.stage }}"
+            echo "Deployment failed for stage: ${{ github.event.inputs.stage }}"
             exit 1
           fi
 
