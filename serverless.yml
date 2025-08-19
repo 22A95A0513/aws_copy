@@ -61,13 +61,27 @@ resources:
                     - logs:CreateLogGroup
                     - logs:CreateLogStream
                     - logs:PutLogEvents
-                    - s3:*
+                    - s3:GetObject
+                    - s3:PutObject
+                    - s3:ListBucket
                     - sns:Publish
+                    - sns:CreateTopic
+                    - sns:DeleteTopic
+                    - sns:Subscribe
+                    - sns:Unsubscribe
                     - events:PutRule
                     - events:PutTargets
                     - events:DescribeRule
                     - events:EnableRule
                     - events:DisableRule
+                    - events:DeleteRule
+                    - events:RemoveTargets
+                    - events:ListRules
+                    - events:ListTargetsByRule
+                    - lambda:GetFunction
+                    - lambda:ListFunctions
+                    - lambda:AddPermission
+                    - lambda:RemovePermission
                     - lambda:InvokeFunction
                     - lambda:UpdateFunctionCode
                     - lambda:UpdateFunctionConfiguration
