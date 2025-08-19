@@ -17,6 +17,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      pythonLocation: /opt/hostedtoolcache/Python/3.9.23/x64
+      PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.9.23/x64/lib/pkgconfig
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,11 +30,22 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
       - name: Install Serverless Framework
-        run: npm install -g serverless
+        run: |
+          echo "Installing Serverless Framework..."
+          if ! npm install -g serverless; then
+            echo "❌ Failed to install Serverless Framework"
+            exit 1
+          fi
 
       - name: Set AWS credentials based on stage
         run: |
+          echo "Setting AWS credentials for stage: ${{ github.event.inputs.stage }}"
           if [ "${{ github.event.inputs.stage }}" == "dev" ]; then
             echo "AWS_ACCESS_KEY_ID=${{ secrets.DEV_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
@@ -40,6 +55,9 @@ jobs:
           elif [ "${{ github.event.inputs.stage }}" == "prod" ]; then
             echo "AWS_ACCESS_KEY_ID=${{ secrets.PROD_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          else
+            echo "❌ Invalid stage selected"
+            exit 1
           fi
 
       - name: Configure AWS credentials
@@ -49,5 +67,21 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Validate Serverless config
+        run: |
+          echo "Validating Serverless configuration..."
+          if ! sls print --stage ${{ github.event.inputs.stage }}; then
+            echo "❌ Serverless config validation failed"
+            exit 1
+          fi
+
       - name: Deploy with Serverless
-        run: sls deploy --stage ${{ github.event.inputs.stage }}
+        run: |
+          echo "Starting deployment for stage: ${{ github.event.inputs.stage }}"
+          if ! sls deploy --stage ${{ github.event.inputs.stage }}; then
+            echo "❌ Deployment failed for stage: ${{ github.event.inputs.stage }}"
+            exit 1
+          fi
+
+      - name: Show deployment info
+        run: sls info --stage ${{ github.event.inputs.stage }}
