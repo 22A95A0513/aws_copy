@@ -4,21 +4,21 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: python3.9
-  region: ${file(params/${opt:stage, 'dev'}/config.yml):region}
+  region: ${file(params/${opt:stage}/config.yml):region}
   timeout: 300
   environment:
-    SRC_BUCKET: ${file(params/${opt:stage, 'dev'}/config.yml):src_bucket}
-    DST_BUCKET_1: ${file(params/${opt:stage, 'dev'}/config.yml):dst_bucket_1}
-    DST_BUCKET_2: ${file(params/${opt:stage, 'dev'}/config.yml):dst_bucket_2}
-    DST_BUCKET_3: ${file(params/${opt:stage, 'dev'}/config.yml):dst_bucket_3}
-    SNS_TOPIC_ARN: ${file(params/${opt:stage, 'dev'}/config.yml):sns_topic_arn}
-    TOPIC_REGION: ${file(params/${opt:stage, 'dev'}/config.yml):region}
+    SRC_BUCKET: ${file(params/${opt:stage}/config.yml):src_bucket}
+    DST_BUCKET_1: ${file(params/${opt:stage}/config.yml):dst_bucket_1}
+    DST_BUCKET_2: ${file(params/${opt:stage}/config.yml):dst_bucket_2}
+    DST_BUCKET_3: ${file(params/${opt:stage}/config.yml):dst_bucket_3}
+    SNS_TOPIC_ARN: ${file(params/${opt:stage}/config.yml):sns_topic_arn}
+    TOPIC_REGION: ${file(params/${opt:stage}/config.yml):region}
   iam:
     role: LambdaExecutionRole
 
 functions:
   copyFiles:
-    name: ${opt:stage, 'dev'}-s3-copy-lambda-function
+    name: ${opt:stage}-s3-copy-lambda-function
     handler: src.lambda_handler.lambda_handler
     events:
       - eventBridge:
@@ -30,14 +30,14 @@ functions:
             detail:
               bucket:
                 name:
-                  - ${file(params/${opt:stage, 'dev'}/config.yml):src_bucket}
+                  - ${file(params/${opt:stage}/config.yml):src_bucket}
 
 resources:
   Resources:
     LambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: ${opt:stage, 'dev'}-lambda-execution-role
+        RoleName: ${opt:stage}-lambda-execution-role
         AssumeRolePolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -48,7 +48,7 @@ resources:
                   - events.amazonaws.com
               Action: sts:AssumeRole
         Policies:
-          - PolicyName: ${opt:stage, 'dev'}-lambda-policy
+          - PolicyName: ${opt:stage}-lambda-policy
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -86,4 +86,4 @@ resources:
     #SNSTopic:
       #Type: AWS::SNS::Topic
       #Properties:
-        #TopicName: ${opt:stage, 'dev'}-sns-topic
+        #TopicName: ${opt:stage}-sns-topic
