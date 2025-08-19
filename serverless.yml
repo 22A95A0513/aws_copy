@@ -19,7 +19,7 @@ provider:
 functions:
   copyFiles:
     name: ${opt:stage, 'dev'}-s3-copy-lambda-function
-    handler: lambda_function.lambda_handler.lambda_handler
+    handler: src.lambda_handler.lambda_handler
     events:
       - eventBridge:
           pattern:
