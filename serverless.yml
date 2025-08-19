@@ -7,12 +7,12 @@ provider:
   region: ${file(params/${opt:stage, 'dev'}/config.yaml):region}
   timeout: 300
   environment:
-    SRC_BUCKET: ${file(params/${opt:stage, 'dev'}/config.yaml):src_bucket}
-    DST_BUCKET_1: ${file(params/${opt:stage, 'dev'}/config.yaml):dst_bucket_1}
-    DST_BUCKET_2: ${file(params/${opt:stage, 'dev'}/config.yaml):dst_bucket_2}
-    DST_BUCKET_3: ${file(params/${opt:stage, 'dev'}/config.yaml):dst_bucket_3}
-    SNS_TOPIC_ARN: ${file(params/${opt:stage, 'dev'}/config.yaml):sns_topic_arn}
-    TOPIC_REGION: ${file(params/${opt:stage, 'dev'}/config.yaml):region}
+    SRC_BUCKET: ${file(params/${opt:stage, 'dev'}/config.yml):src_bucket}
+    DST_BUCKET_1: ${file(params/${opt:stage, 'dev'}/config.yml):dst_bucket_1}
+    DST_BUCKET_2: ${file(params/${opt:stage, 'dev'}/config.yml):dst_bucket_2}
+    DST_BUCKET_3: ${file(params/${opt:stage, 'dev'}/config.yml):dst_bucket_3}
+    SNS_TOPIC_ARN: ${file(params/${opt:stage, 'dev'}/config.yml):sns_topic_arn}
+    TOPIC_REGION: ${file(params/${opt:stage, 'dev'}/config.yml):region}
   iam:
     role: LambdaExecutionRole
 
