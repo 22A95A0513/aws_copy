@@ -48,7 +48,7 @@ def lambda_handler(event,context):
 
     print(src_files_list)
     for file_nm in src_files_list:
-        if file_nm.endswith('/') or '.' not in file_nm:
+        if file_nm.endswith('/') or '.' not in file_nm or 'transfer_family/' not in file_nm:
             print("Skipping the folders and files without extension")
             continue
 
@@ -125,3 +125,4 @@ def copy_logic(s3,copy_Source,src_bucket_nm,dst_bucket_nm, revise_file_name, key
     print(f"Copied the file {src_bucket_nm}->{key} to {dst_bucket_nm}->{sub_folder}->{revise_file_name}")
 
     print(f"Copied the file {src_bucket_nm}->{key} to {dst_bucket_nm}->{sub_folder}->archive->{revise_file_name}","\n")
+
