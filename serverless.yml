@@ -1,4 +1,4 @@
-service: s3-file-copy-lambda
+service: my-lambda-service
 frameworkVersion: '3'
 
 provider:
