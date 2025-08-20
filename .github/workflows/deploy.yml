@@ -49,15 +49,12 @@ jobs:
           if [ "${{ github.event.inputs.stage }}" == "dev" ]; then
             echo "AWS_ACCESS_KEY_ID=${{ secrets.DEV_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-            echo "AWS_REGION=${file(params/${{ github.event.inputs.stage }}/config.yml):region}" >> GITHUB_ENV
           elif [ "${{ github.event.inputs.stage }}" == "qa" ]; then
             echo "AWS_ACCESS_KEY_ID=${{ secrets.QA_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.QA_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-            echo "AWS_REGION=${file(params/${{ github.event.inputs.stage }}/config.yml):region}" >> GITHUB_ENV
           elif [ "${{ github.event.inputs.stage }}" == "prod" ]; then
             echo "AWS_ACCESS_KEY_ID=${{ secrets.PROD_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-            echo "AWS_REGION=${file(params/${{ github.event.inputs.stage }}/config.yml):region}" >> GITHUB_ENV
           else
             echo "Invalid stage selected"
             exit 1
@@ -68,7 +65,7 @@ jobs:
         with:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: "${file(params/${{ github.event.inputs.stage }}/config.yml):region}"
 
       - name: Validate Serverless config
         run: |
