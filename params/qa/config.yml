@@ -4,6 +4,7 @@ dst_bucket_1: qa-dst-bucket-1
 dst_bucket_2: qa-dst-bucket-2
 dst_bucket_3: qa-dst-bucket-3
 sns_topic_arn: arn:aws:sns:us-east-1:977965277372:s3Copy
+iam_role: arn:aws:iam::977965277372:role/lambda-execution-role
 tags:
   Environment: qa
   Owner: team-qa
