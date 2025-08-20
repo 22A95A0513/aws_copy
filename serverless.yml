@@ -4,16 +4,6 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: python3.9
-  region: ${file(params/${opt:stage}/config.yml):region}
-  timeout: 300
-  role: ${file(params/${opt:stage}/config.yml):iam_role}
-  environment:
-    SRC_BUCKET: ${file(params/${opt:stage}/config.yml):src_bucket}
-    DST_BUCKET_1: ${file(params/${opt:stage}/config.yml):dst_bucket_1}
-    DST_BUCKET_2: ${file(params/${opt:stage}/config.yml):dst_bucket_2}
-    DST_BUCKET_3: ${file(params/${opt:stage}/config.yml):dst_bucket_3}
-    SNS_TOPIC_ARN: ${file(params/${opt:stage}/config.yml):sns_topic_arn}
-    TOPIC_REGION: ${file(params/${opt:stage}/config.yml):region}
   #iam:
     #role: LambdaExecutionRole
   tags:
@@ -36,3 +26,13 @@ functions:
               bucket:
                 name:
                   - ${file(params/${opt:stage}/config.yml):src_bucket}
+    region: ${file(params/${opt:stage}/config.yml):region}
+    timeout: 300
+    role: ${file(params/${opt:stage}/config.yml):iam_role}
+    environment:
+      SRC_BUCKET: ${file(params/${opt:stage}/config.yml):src_bucket}
+      DST_BUCKET_1: ${file(params/${opt:stage}/config.yml):dst_bucket_1}
+      DST_BUCKET_2: ${file(params/${opt:stage}/config.yml):dst_bucket_2}
+      DST_BUCKET_3: ${file(params/${opt:stage}/config.yml):dst_bucket_3}
+      SNS_TOPIC_ARN: ${file(params/${opt:stage}/config.yml):sns_topic_arn}
+      TOPIC_REGION: ${file(params/${opt:stage}/config.yml):region}
