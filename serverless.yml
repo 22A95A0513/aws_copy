@@ -6,7 +6,7 @@ provider:
   runtime: python3.9
   region: ${file(params/${opt:stage}/config.yml):region}
   timeout: 300
-  role: ${file(.params/{opt.stage}/config.yml):iam_role}
+  role: ${file(params/${opt.stage}/config.yml):iam_role}
   environment:
     SRC_BUCKET: ${file(params/${opt:stage}/config.yml):src_bucket}
     DST_BUCKET_1: ${file(params/${opt:stage}/config.yml):dst_bucket_1}
