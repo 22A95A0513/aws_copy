@@ -83,8 +83,8 @@ def lambda_handler(event,context):
         #2nd filetypes Copy
         elif 'transfer_family/dst2/' in file_nm:
 
-            if '_' in ext:
-                ext=ext.split('_')[0]
+            # if '_' in ext:
+            #     ext=ext.split('_')[0]
             revise_file_name = name+str('_')+str(last_modified.strftime('%Y%m%d%H%M%S'))+str('.')+ext
 
             if revise_file_name not in dst_file_names_2:
@@ -125,4 +125,5 @@ def copy_logic(s3,copy_Source,src_bucket_nm,dst_bucket_nm, revise_file_name, key
     print(f"Copied the file {src_bucket_nm}->{key} to {dst_bucket_nm}->{sub_folder}->{revise_file_name}")
 
     print(f"Copied the file {src_bucket_nm}->{key} to {dst_bucket_nm}->{sub_folder}->archive->{revise_file_name}","\n")
+
 
