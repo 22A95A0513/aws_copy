@@ -16,6 +16,10 @@ provider:
     TOPIC_REGION: ${file(params/${opt:stage}/config.yml):region}
   #iam:
     #role: LambdaExecutionRole
+  tags:
+    id: 2861
+    name: demo-s3-copy
+    created-by-email: msravanthi173@gmail.com
 
 functions:
   copyFiles:
