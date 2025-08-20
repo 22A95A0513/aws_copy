@@ -6,6 +6,7 @@ provider:
   runtime: python3.9
   region: ${file(params/${opt:stage}/config.yml):region}
   timeout: 300
+  role: ${file(.params/{opt.stage}/config.yml):iam_role}
   environment:
     SRC_BUCKET: ${file(params/${opt:stage}/config.yml):src_bucket}
     DST_BUCKET_1: ${file(params/${opt:stage}/config.yml):dst_bucket_1}
@@ -13,8 +14,8 @@ provider:
     DST_BUCKET_3: ${file(params/${opt:stage}/config.yml):dst_bucket_3}
     SNS_TOPIC_ARN: ${file(params/${opt:stage}/config.yml):sns_topic_arn}
     TOPIC_REGION: ${file(params/${opt:stage}/config.yml):region}
-  iam:
-    role: LambdaExecutionRole
+  #iam:
+    #role: LambdaExecutionRole
 
 functions:
   copyFiles:
@@ -31,59 +32,3 @@ functions:
               bucket:
                 name:
                   - ${file(params/${opt:stage}/config.yml):src_bucket}
-
-resources:
-  Resources:
-    LambdaExecutionRole:
-      Type: AWS::IAM::Role
-      Properties:
-        RoleName: ${opt:stage}-lambda-execution-role
-        AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service:
-                  - lambda.amazonaws.com
-                  - events.amazonaws.com
-              Action: sts:AssumeRole
-        Policies:
-          - PolicyName: ${opt:stage}-lambda-policy
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action:
-                    - logs:CreateLogGroup
-                    - logs:CreateLogStream
-                    - logs:PutLogEvents
-                    - s3:GetObject
-                    - s3:PutObject
-                    - s3:ListBucket
-                    - sns:Publish
-                    - sns:CreateTopic
-                    - sns:DeleteTopic
-                    - sns:Subscribe
-                    - sns:Unsubscribe
-                    - events:PutRule
-                    - events:PutTargets
-                    - events:DescribeRule
-                    - events:EnableRule
-                    - events:DisableRule
-                    - events:DeleteRule
-                    - events:RemoveTargets
-                    - events:ListRules
-                    - events:ListTargetsByRule
-                    - lambda:GetFunction
-                    - lambda:ListFunctions
-                    - lambda:AddPermission
-                    - lambda:RemovePermission
-                    - lambda:InvokeFunction
-                    - lambda:UpdateFunctionCode
-                    - lambda:UpdateFunctionConfiguration
-                  Resource: "*"
-
-    #SNSTopic:
-      #Type: AWS::SNS::Topic
-      #Properties:
-        #TopicName: ${opt:stage}-sns-topic
