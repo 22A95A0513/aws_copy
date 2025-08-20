@@ -8,7 +8,7 @@
     "nodeploy": "serverless deploy -n",  
    "package": "rimraf *.zip && zip -rq temp-app.zip ./params/*.yml src node_modules package*.json serverless.yml ./get-current-time.js && mv temp-app.zip",
     "build": "python3 -m py_compile src/*.py",    
-    "test": "pytest ./src/test/",
+    "test": "pytest ./test/test-s3-copy.py/",
     "deploy": "npm run build && serverless deploy",
     "remove": "serverless remove"
   },
