@@ -36,3 +36,10 @@ functions:
       DST_BUCKET_3: ${file(params/${opt:stage}/config.yml):dst_bucket_3}
       SNS_TOPIC_ARN: ${file(params/${opt:stage}/config.yml):sns_topic_arn}
       TOPIC_REGION: ${file(params/${opt:stage}/config.yml):region}
+    package: 
+      include:
+        - dist-packages/**
+        - src/lambda_handler.py
+      exclude:
+        - test/*
+        - get-current-time.js
