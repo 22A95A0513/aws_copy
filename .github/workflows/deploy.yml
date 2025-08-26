@@ -60,9 +60,10 @@ jobs:
               echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
       - name: Enable EventBridge notifications on existing S3 bucket
         run: |
-          aws s3control put-bucket-notification-configuration \
+          aws s3api put-bucket-notification-configuration \
           --bucket $BUCKET_NAME \
           --notification-configuration '{"EventBridgeConfiguration":{"EventBridgeEnabled":true}}'
+
 
       - name: Set AWS credentials based on stage
         run: |
