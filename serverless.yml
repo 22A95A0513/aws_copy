@@ -27,6 +27,9 @@ custom:
   s3Notification:
     bucket: ${file(params/${opt:stage}/config.yml):src_bucket}
     eventBridge: true
+  prune:
+    automatic: true
+    number: 3
 
 functions:
   copyFiles:
