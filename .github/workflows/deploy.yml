@@ -53,11 +53,7 @@ jobs:
             echo "Failed to install Serverless Framework"
             exit 1
           fi
-      - name: Extract bucket name from params file
-        id: extract_bucket
-        run: |
-              BUCKET_NAME=$(grep '^src_bucket:' params/${{ github.event.inputs.stage }}/config.yml | sed 's/src_bucket:[[:space:]]*//')
-              echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
+
       - name: Set AWS credentials based on stage
         run: |
           echo "Setting AWS credentials for stage: ${{ github.event.inputs.stage }}"
@@ -81,12 +77,6 @@ jobs:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-          
-      - name: Enable EventBridge notifications on existing S3 bucket
-        run: |
-          aws s3api put-bucket-notification-configuration \
-          --bucket $BUCKET_NAME \
-          --notification-configuration '{"EventBridgeConfiguration": {}}'
 
       - name: Validate Serverless config
         run: |
