@@ -21,7 +21,6 @@ provider:
 
 plugins:
   - serverless-prune-plugin
-  - serverless-plugin-existing-s3
  
 custom:
   s3Notification:
