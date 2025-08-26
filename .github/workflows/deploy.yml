@@ -25,6 +25,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Install Serverless Framework
+        run: |
+          echo "Installing Serverless Framework..."
+          if ! npm install -g serverless@3; then
+            echo "Failed to install Serverless Framework"
+            exit 1
+          fi
+          
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -60,18 +71,12 @@ jobs:
             exit 1
           fi
 
-      - name: Extract AWS region from config
-        id: extract_region
-        run: |
-              REGION=$(grep '^region:' params/${{ github.event.inputs.stage }}/config.yml | sed 's/region:[[:space:]]*//')
-              echo "AWS_REGION=$REGION" >> $GITHUB_ENV
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{env.AWS_REGION}}
+          aws-region: us-east-1
 
       - name: Validate Serverless config
         run: |
