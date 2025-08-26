@@ -30,15 +30,6 @@ custom:
   prune:
     automatic: true
     number: 3
-resources:
-  Resources:
-    S3Bucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${file(params/${opt:stage}/config.yml):src_bucket}
-        NotificationConfiguration:
-          EventBridgeConfiguration:
-            EventBridgeEnabled: true
 
 functions:
   copyFiles:
