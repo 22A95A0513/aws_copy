@@ -25,7 +25,7 @@ plugins:
   - serverless-scriptable-plugin
 
 custom:
-  bucketName: ${file(params/${opt:stage}.yml):bucketName}
+  bucketName: ${file(params/${opt:stage}/config.yml):bucketName}
 
   scriptHooks:
     after:deploy:deploy: |
