@@ -4,7 +4,7 @@ dst_bucket_1: dev-dst-bucket-1
 dst_bucket_2: dev-dst-bucket-2
 dst_bucket_3: dev-dst-bucket-3
 sns_topic_arn: arn:aws:sns:us-east-1:977965277372:s3Copy
-iam_role: arn:aws:iam::977965277372:role/lambda-execution-role
+iam_role: arn:aws:iam::977965277372:role/aws-copy-role
 tags:
   Environment: dev
   Owner: team-dev
