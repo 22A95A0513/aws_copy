@@ -4,12 +4,29 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: python3.9
-  #iam:
-    #role: LambdaExecutionRole
+  region: ${file(params/${opt:stage}/config.yml):region}
+  timeout: 300
+  role: ${file(params/${opt:stage}/config.yml):iam_role}
+  environment:
+    SRC_BUCKET: ${file(params/${opt:stage}/config.yml):src_bucket}
+    DST_BUCKET_1: ${file(params/${opt:stage}/config.yml):dst_bucket_1}
+    DST_BUCKET_2: ${file(params/${opt:stage}/config.yml):dst_bucket_2}
+    DST_BUCKET_3: ${file(params/${opt:stage}/config.yml):dst_bucket_3}
+    SNS_TOPIC_ARN: ${file(params/${opt:stage}/config.yml):sns_topic_arn}
+    TOPIC_REGION: ${file(params/${opt:stage}/config.yml):region}
   tags:
     id: 2861
     name: demo-s3-copy
     created-by-email: msravanthi173@gmail.com
+
+plugins:
+  - serverless-prune-plugin
+  - serverless-plugin-existing-s3
+ 
+custom:
+  s3Notification:
+    bucket: ${file(params/${opt:stage}/config.yml):src_bucket}
+    eventBridge: true
 
 functions:
   copyFiles:
@@ -26,20 +43,3 @@ functions:
               bucket:
                 name:
                   - ${file(params/${opt:stage}/config.yml):src_bucket}
-    region: ${file(params/${opt:stage}/config.yml):region}
-    timeout: 300
-    role: ${file(params/${opt:stage}/config.yml):iam_role}
-    environment:
-      SRC_BUCKET: ${file(params/${opt:stage}/config.yml):src_bucket}
-      DST_BUCKET_1: ${file(params/${opt:stage}/config.yml):dst_bucket_1}
-      DST_BUCKET_2: ${file(params/${opt:stage}/config.yml):dst_bucket_2}
-      DST_BUCKET_3: ${file(params/${opt:stage}/config.yml):dst_bucket_3}
-      SNS_TOPIC_ARN: ${file(params/${opt:stage}/config.yml):sns_topic_arn}
-      TOPIC_REGION: ${file(params/${opt:stage}/config.yml):region}
-    package: 
-      include:
-        - dist-packages/**
-        - src/lambda_handler.py
-      exclude:
-        - test/*
-        - get-current-time.js
