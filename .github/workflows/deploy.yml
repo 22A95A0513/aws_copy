@@ -25,8 +25,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install project dependencies
-        run: npm ci
+      - name: Install project dependencies with fallback
+        run: |
+          echo "Running npm ci..."
+          if ! npm ci; then
+            echo "npm ci failed, falling back to npm install..."
+            npm install
+          fi
 
       - name: Install Serverless Framework
         run: |
