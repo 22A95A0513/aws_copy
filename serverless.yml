@@ -22,14 +22,16 @@ provider:
 plugins:
   - serverless-prune-plugin
   - serverless-plugin-existing-s3
- 
+  - serverless-scriptable-plugin
+
 custom:
-  s3Notification:
-    bucket: ${file(params/${opt:stage}/config.yml):src_bucket}
-    eventBridge: true
-  prune:
-    automatic: true
-    number: 3
+  bucketName: ${file(params/${opt:stage}.yml):bucketName}
+
+  scriptHooks:
+    after:deploy:deploy: |
+      aws s3api put-bucket-notification-configuration \
+        --bucket ${self:custom.bucketName} \
+        --notification-configuration '{"EventBridgeConfiguration": {}}'
 
 functions:
   copyFiles:
